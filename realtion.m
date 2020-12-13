@@ -1,4 +1,4 @@
-theta = theta(:, end);
+% delta_ios = delta_ios(:, end);
  U    = mU(:,    end);
 
 sR = [0.01 0.02 0.04 0.08 0.25 0.4];
@@ -37,19 +37,19 @@ alpha = [...
 SimUz = @(Rr, Ttheta) ((Rr+Ttheta)./((Rr+Ttheta/2)))./(((Rr+Ttheta/2)./(Rr+Ttheta))+1);
 
 figure
-plot(k.*SimUz(R, theta)./theta.^2./g, U, '-*');
+plot(k.*SimUz(R, delta_ios)./delta_ios.^2./g, U, '-*');
 
 figure
-plot(R, SimUz(R, theta), '-*')
+plot(R, SimUz(R, delta_ios), '-*')
 hold on
 plot(linspace(min(R), max(R), 100), SimUz(linspace(min(R), max(R), 100),0.059))
 
 figure
-plot(U, k.*((2*R+2*theta/3)./((R+theta/2).*(theta.^2)))./(((R+theta/2)./(R+theta))+1), '*');
+plot(U, k.*((2*R+2*delta_ios/3)./((R+delta_ios/2).*(delta_ios.^2)))./(((R+delta_ios/2)./(R+delta_ios))+1), '*');
 
 lhs = 0.5*visco.*alpha./(g*0.0016*7); 
-var_f = @(A)10000*var((lhs.*((R+theta/3)./(R+theta/2)).*((R+theta*A)./(R+theta/2)))./((theta.^4).*((R+theta/2)./(R+theta)+1)));
-ef = @(C)sum(((lhs.*((R+theta/3)./(R+theta/2)).*((R+theta*C(1))./(R+theta/2)))./((theta.^4).*((R+theta/2)./(R+theta)+1))-C(2)).^2);
+var_f = @(A)10000*var((lhs.*((R+delta_ios/3)./(R+delta_ios/2)).*((R+delta_ios*A)./(R+delta_ios/2)))./((delta_ios.^4).*((R+delta_ios/2)./(R+delta_ios)+1)));
+ef = @(C)sum(((lhs.*((R+delta_ios/3)./(R+delta_ios/2)).*((R+delta_ios*C(1))./(R+delta_ios/2)))./((delta_ios.^4).*((R+delta_ios/2)./(R+delta_ios)+1))-C(2)).^2);
 tf = @(R, lhs, C1, C2, ctheta) (lhs*((R+ctheta/3)./(R+ctheta/2))*((R+ctheta*C1)./(R+ctheta/2)))/((ctheta.^4)*((R+ctheta/2)/(R+ctheta)+1))-C2;
 
 [A, afval] = fminunc(var_f, 1);
@@ -62,6 +62,6 @@ ctheta = arrayfun(@(rR, llhs, cC1, cC2) fzero(@(tT) tf(rR, llhs, cC1, cC2, tT), 
 figure
 plot(U, k.*((2*R+2*ctheta/3)./((R+ctheta/2).*(ctheta.^2)))./(((R+ctheta/2)./(R+ctheta))+1), '*');
 
-xishu2 = 2*(((R+theta/3)./(R+theta/2)).*((R+theta*A)./(R+theta/2)))./((R+theta/2)./(R+theta)+1);
+xishu2 = 2*(((R+delta_ios/3)./(R+delta_ios/2)).*((R+delta_ios*A)./(R+delta_ios/2)))./((R+delta_ios/2)./(R+delta_ios)+1);
 figure
-plot(theta, power(xishu2.*lhs, 1/4), '*')
+plot(delta_ios, power(xishu2.*lhs, 1/4), '*')

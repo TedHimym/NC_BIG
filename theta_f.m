@@ -30,9 +30,12 @@ for ind = 1: length(t_c)
     figure(2); plot(t_c{ind},    mU(ind,:))
 end
 
+save('theta_mU', 'theta', 'mU');
 %%
 
 function delv = del_T(R, T)
+T = T(R < R(1)+0.5);
+R = R(R < R(1)+0.5);
 ER = min(T) + (max(T)-min(T))*0.99;
 indexR=(T==min(T(T>ER)));
 indexL=(T==max(T(T<ER)));
